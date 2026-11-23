@@ -1,0 +1,133 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                  RadiantUI  ·  pausemenu.yml                  ║
+# ╚══════════════════════════════════════════════════════════════╝
+config-version: 2
+
+# ── Texturas del menú de pausa (ESC) · cómic blanco y negro ──
+# Botones tipo "tablón": tinta negra, marco interior claro, bisel, veta diagonal y remaches de estrella.
+# Las decoraciones viven en los 6 px laterales (nine-slice), así el texto largo
+# ("Opciones del mundo...", "Enlaces del servidor") nunca choca con ellas.
+textures:
+  buttons: true
+  sliders: true
+  text-fields: true
+  separators: true
+  backgrounds: true
+
+# ── Logo arriba del menú de pausa ──
+# Reemplaza el texto "Menú del juego" por el logo del plugin (glifo pause_logo) con un perrito
+# a cada lado. Origen del logo: plugins/RadiantUI/pause-logo.png > plugins/RadiantUI/pack.png >
+# logo incluido en el jar (radiantui96). Si no hay logo, se usa una cinta con "text".
+pause-title:
+  logo-height: 56        # alto en píxeles de GUI
+  grayscale: true        # convierte el logo a blanco y negro
+  side-pups: false       # perritos y estrellas a los lados del logo (false = logo solo)
+  # Desplazamiento vertical: positivo = más arriba (máx. +1), negativo = más abajo.
+  # Si el logo toca el primer botón (pantallas bajas / escala de GUI alta) baja logo-height.
+  offset-y: -24
+  text: "MENU"           # solo se usa si no hay logo (cinta pixel-art)
+  ascent: 26             # ascent de la cinta de texto (pause_title)
+
+# Textos de idioma sobrescritos en el pack. Tokens: {glyph:id} y {space:px}
+# Borra una línea para dejar el texto vanilla.
+# "all" = todos los idiomas del cliente (recomendado). También puedes listar: [es_es, es_mx, en_us]
+lang-locales: [all]
+lang-overrides:
+  "menu.game": "{glyph:pause_logo}"
+  "menu.paused": "{glyph:pause_logo}"
+
+# ── Server Links nativos (Paper 1.21+) ──
+# Qué hace el cliente vanilla (sin mods):
+#   · Si hay enlaces, el menú de pausa muestra UN botón "Enlaces del servidor" con la lista.
+#   · Cada enlace es un botón con el nombre que envíes; al pulsarlo pide confirmación y abre el navegador.
+#   · Los enlaces con "type" usan un nombre traducido por el cliente (REPORT_BUG también sale en la
+#     pantalla de desconexión).
+#   · No se pueden inyectar botones de URL sueltos en el menú ESC → para eso está quick-menu (abajo).
+server-links:
+  enabled: true
+  replace-existing: false
+  numbered: false
+  link-format: "{icon}{name}"
+  # Iconos: chat, cart, globe, book, bug, link, heart, paw, puppy, star, coin, pin...
+  # Los botones son oscuros → usa colores claros (<white>, <gray>).
+  # quick-menu: false  → no lo añade al menú rápido · chat: false → no sale en el chat
+  links:
+    discord:
+      name: "<white>Discord</white> <gray>· comunidad</gray>"
+      icon: chat
+      description: "Únete a nuestro Discord"
+      url: "https://discord.gg/tuservidor"
+    tienda:
+      name: "<white>Tienda</white> <gray>· rangos</gray>"
+      icon: cart
+      description: "Apoya al servidor"
+      url: "https://tienda.tuservidor.com"
+    web:
+      name: "<white>Web</white> <gray>· noticias</gray>"
+      icon: globe
+      description: "Página oficial"
+      url: "https://tuservidor.com"
+    reglas:
+      name: "<white>Reglas</white> <gray>· léelas ★</gray>"
+      icon: book
+      description: "Normas del servidor"
+      url: "https://tuservidor.com/reglas"
+    bugs:
+      type: REPORT_BUG
+      name: "<white>Reportar errores</white>"
+      icon: bug
+      description: "Cuéntanos qué falló"
+      url: "https://tuservidor.com/bugs"
+
+# ── Menú rápido nativo (1.21.6+ / 26.x, sin mods) ──
+# RadiantUI genera un datapack en <mundo>/datapacks/radiantui con un diálogo de botones
+# (URLs y comandos) y lo añade a:
+#   · pause_screen_additions → aparece un BOTÓN DESTACADO en el menú ESC con "pause-button-label"
+#   · quick_actions          → se abre con la tecla de "Acciones rápidas" del cliente
+# También se abre con /ui menu. En servidores anteriores a 1.21.6 se usa el chat.
+quick-menu:
+  enabled: true
+  install-datapack: true
+  # Ejecuta /minecraft:reload cuando el datapack cambia (la primera vez puede requerir reiniciar)
+  auto-reload: true
+  pause-button: true
+  quick-actions-key: true
+  # Texto del botón del menú ESC (estilo "/DISCORD" con iconos a los lados)
+  pause-button-label: "<glyph:chat> <white><bold>ENLACES</bold></white> <glyph:star>"
+  title: "<white><bold>★ Enlaces rápidos ★</bold></white>"
+  # Banner pixel-art en la parte superior del diálogo
+  banner: true
+  banner-text: "ENLACES"
+  body: "<gray>Elige a dónde quieres ir</gray>"
+  columns: 2
+  button-width: 150
+  close-label: "<gray>Volver</gray>"
+  # Añade cada enlace de server-links como botón
+  include-server-links: true
+  # Botones extra: url (abre el navegador) o command (lo ejecuta el jugador)
+  buttons:
+    spawn:
+      label: "<glyph:pin> <white>Spawn</white>"
+      tooltip: "<gray>Volver al spawn"
+      command: "/spawn"
+    chat-links:
+      label: "<glyph:link> <white>Enlaces en el chat</white>"
+      tooltip: "<gray>Muestra los enlaces clicables en el chat"
+      command: "/ui links"
+
+# ── Accesos rápidos en el chat ──
+# /ui links muestra la lista completa. Al entrar se envía una línea compacta clicable.
+# Placeholders de entry/compact.entry: {label} {icon} {name} {short} {index} {url} {description}
+# short = "short-name" del enlace (por defecto su id con mayúscula), ideal para la línea compacta
+chat-shortcuts:
+  enabled: true
+  on-join: true
+  on-join-style: compact      # compact = una línea · list = lista completa
+  on-join-delay-ticks: 60
+  compact:
+    format: "<dark_gray>★</dark_gray> <gray>Enlaces:</gray> {entries} <dark_gray>· ESC o /ui menu</dark_gray>"
+    entry: "<click:open_url:'{url}'><hover:show_text:'<white>{description}</white><newline><gray>Clic para abrir'><white>[{short}]</white></hover></click>"
+    separator: " "
+  header: "<dark_gray>┌─</dark_gray> <white>★ Enlaces del servidor</white> <dark_gray>─────────────</dark_gray>"
+  entry: "<dark_gray>│</dark_gray> <click:open_url:'{url}'><hover:show_text:'<white>{description}</white><newline><gray>Clic para abrir'>{label} <gray>[abrir]</gray></hover></click>"
+  footer: "<dark_gray>└─</dark_gray> <gray>También en <white>ESC</white> o con <white>/ui menu</white>"

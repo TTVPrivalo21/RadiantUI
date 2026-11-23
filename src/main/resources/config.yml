@@ -1,0 +1,138 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                  RadiantUI  ·  config.yml                     ║
+# ║   Tema principal: snoopy_classic (cómic blanco y negro)       ║
+# ╚══════════════════════════════════════════════════════════════╝
+# Todos los textos usan MiniMessage (https://docs.advntr.dev/minimessage/format.html).
+# Etiquetas extra de RadiantUI disponibles en cualquier texto:
+#   <space:px>            desplaza el cursor px píxeles (negativo = izquierda)
+#   <glyph:id>            inserta un icono pixel-art (heart, paw, puppy, bone, coin, star...)
+#   <overlay:id[:dx]>     dibuja una imagen sin avanzar el cursor (fondos de menús/HUD)
+#   <accent> <accent_light> <accent_pale> <dark> <outline> <background> <background_alt>
+#   <text> <highlight> <shade>  → colores del tema del jugador
+
+config-version: 2
+
+theme:
+  # Tema global del servidor (se usa si el jugador no eligió uno o si los temas por jugador están apagados)
+  default: snoopy_classic
+  # Permite que cada jugador elija su tema con /ui theme <tema> (solo si hay 2+ temas habilitados)
+  allow-player-themes: true
+
+# ──────────────────────────────── TEMAS ────────────────────────────────
+# Para crear un tema nuevo copia un bloque, cambia el id y los colores. Al hacer
+# /ui reload se generará automáticamente un resource pack para cada tema habilitado.
+# motif: snoopy | paws | hearts | plain   (decoración de menús, iconos y marcos)
+themes:
+  snoopy_classic:
+    enabled: true
+    display-name: "<white>★</white> <white>Snoopy</white> <gray>Classic</gray>"
+    description: "Cómic clásico en blanco y negro: tinta negra, brillos blancos y grises"
+    motif: snoopy
+    colors:
+      background: "#FFFFFF"      # fondos principales (papel)
+      background-alt: "#E5E7EB"  # fondos secundarios / huecos de slots
+      dark: "#18181B"            # carbón (manchas del perrito, botones)
+      outline: "#09090B"         # tinta negra
+      accent: "#18181B"          # detalle principal (corazones, barras)
+      accent-light: "#52525B"    # detalle secundario (líneas, tramado)
+      accent-pale: "#E5E7EB"     # detalle suave
+      text: "#18181B"            # texto sobre fondos blancos
+      highlight: "#FFFFFF"       # brillos
+      shade: "#52525B"           # sombras marcadas
+
+  snoopy_night:
+    enabled: true
+    display-name: "<gray>☾</gray> <white>Snoopy</white> <dark_gray>Night</dark_gray>"
+    description: "Versión nocturna: fondos negro/carbón con tinta blanca"
+    motif: snoopy
+    colors:
+      background: "#18181B"
+      background-alt: "#27272A"
+      dark: "#FFFFFF"
+      outline: "#09090B"
+      accent: "#FFFFFF"
+      accent-light: "#E5E7EB"
+      accent-pale: "#52525B"
+      text: "#FFFFFF"
+      highlight: "#FFFFFF"
+      shade: "#52525B"
+
+  paw_mint:
+    enabled: false
+    display-name: "<#7FD8BE>✿</#7FD8BE> <#2B2B2B>Paw Mint</#2B2B2B>"
+    description: "Ejemplo de tema extra con color (desactivado)"
+    motif: paws
+    colors:
+      background: "#FFFFFF"
+      background-alt: "#EEF6F3"
+      dark: "#1E1E1E"
+      outline: "#000000"
+      accent: "#4FC3A1"
+      accent-light: "#7FD8BE"
+      accent-pale: "#BDEBDC"
+      text: "#2B2B2B"
+      highlight: "#FFFFFF"
+      shade: "#B5C4BF"
+
+# ──────────────────────────── RESOURCE PACK ────────────────────────────
+pack:
+  enabled: true
+  # Formatos: 34 = 1.21/1.21.1 · 46 = 1.21.4 · 55 = 1.21.5 · 63/64 = 1.21.6-1.21.8 · 69+ = 1.21.9+/26.x
+  pack-format: 46
+  min-format: 34
+  max-format: 999
+  description: "<white>★ RadiantUI</white> <gray>· {theme}"
+  # Obligar a aceptar el pack (kick si lo rechaza)
+  required: false
+  prompt: "<white>Este servidor usa <white>RadiantUI</white> para una interfaz más bonita ♥"
+  kick-on-decline: false
+  kick-message: "<white>Necesitas aceptar el resource pack para jugar aquí ♥"
+  # Ticks a esperar tras el join antes de enviar el pack
+  send-delay-ticks: 20
+  # Guarda una copia descomprimida del pack en plugins/RadiantUI/generated/<tema>/ para inspeccionarla
+  export-unzipped: true
+  # Combinar el pack generado por Oraxen dentro del nuestro (desactiva el envío del pack en Oraxen)
+  oraxen-merge:
+    enabled: true
+    zip: "plugins/Oraxen/pack/pack.zip"
+    # Oraxen genera su pack después de arrancar: reconstruimos tras este retraso
+    rebuild-delay-seconds: 15
+  # Si http.enabled = false, usa esta URL externa ({theme} y {sha1} se reemplazan)
+  external-url: ""
+
+# ───────────────────────────── HTTP INTEGRADO ──────────────────────────
+http:
+  enabled: true
+  bind: "0.0.0.0"
+  port: 8163
+  # URL pública base. Vacío = automático (server-ip de server.properties o IP local detectada).
+  # Ejemplo: "http://play.miservidor.com:8163"
+  public-url: ""
+  threads: 2
+
+# ─────────────────────────────── MENSAJES ──────────────────────────────
+messages:
+  prefix: "<dark_gray>[</dark_gray><white>♥ RadiantUI</white><dark_gray>]</dark_gray> "
+  no-permission: "<prefix><white>No tienes permiso para hacer eso."
+  players-only: "<prefix><white>Este comando solo puede usarlo un jugador."
+  player-not-found: "<prefix><white>Jugador no encontrado: <gray>{name}"
+  usage: "<prefix><gray>Uso: <white>/ui <theme|hud|scoreboard|pack|links|reload>"
+  theme-list-header: "<prefix><gray>Temas disponibles <gray>(actual: {current})</gray>:"
+  theme-list-entry: "  <white>•</white> <click:run_command:'/ui theme {id}'><hover:show_text:'{description}'>{display}</hover></click> <gray>({id})"
+  theme-set: "<prefix><gray>Tu tema ahora es {display}<gray>. Descargando pack..."
+  theme-set-other: "<prefix><gray>Tema de <white>{player}</white> cambiado a {display}<gray>."
+  theme-reset: "<prefix><gray>Ahora usas el tema global {display}<gray>."
+  theme-global-set: "<prefix><gray>Tema global cambiado a {display}<gray>."
+  theme-unknown: "<prefix><white>Ese tema no existe o está deshabilitado: <gray>{id}"
+  theme-locked: "<prefix><white>Los temas por jugador están desactivados en este servidor."
+  hud-on: "<prefix><gray>HUD <white>activado</white>."
+  hud-off: "<prefix><gray>HUD <gray>desactivado</gray>."
+  scoreboard-on: "<prefix><gray>Scoreboard <white>activado</white>."
+  scoreboard-off: "<prefix><gray>Scoreboard <gray>desactivado</gray>."
+  pack-sending: "<prefix><gray>Enviando resource pack <white>{theme}</white>..."
+  pack-not-ready: "<prefix><white>El resource pack todavía se está generando, inténtalo en unos segundos."
+  pack-loaded: "<prefix><gray>Resource pack cargado ♥"
+  links-empty: "<prefix><gray>No hay enlaces configurados para mostrar en el chat."
+  reload-start: "<prefix><gray>Recargando configuración y regenerando packs..."
+  reload-done: "<prefix><gray>Recarga completa en <white>{ms}ms</white> · {packs} pack(s) generados."
+  reload-failed: "<prefix><white>Error al regenerar los packs: <gray>{error}"
