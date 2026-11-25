@@ -18,6 +18,8 @@ import dev.privalo.ui.scoreboard.ScoreboardManager;
 import dev.privalo.ui.text.GlyphRegistry;
 import dev.privalo.ui.text.Placeholders;
 import dev.privalo.ui.text.TextService;
+import dev.privalo.ui.update.UpdateChecker;
+import dev.privalo.ui.update.VersionTracker;
 import dev.privalo.ui.theme.Theme;
 import dev.privalo.ui.theme.ThemeManager;
 import org.bukkit.Bukkit;
@@ -50,10 +52,12 @@ public final class RadiantUI extends JavaPlugin {
     private ContainerSkinManager containers;
     private ServerLinksManager links;
     private QuickMenu quickMenu;
+    private UpdateChecker updates;
 
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
+        VersionTracker.check(getDataFolder(), getPluginMeta().getVersion(), getLogger());
         configs = new ConfigFiles(this);
         configs.load();
 
@@ -85,6 +89,8 @@ public final class RadiantUI extends JavaPlugin {
         pm.registerEvents(scoreboard, this);
         pm.registerEvents(containers, this);
         pm.registerEvents(links, this);
+        updates = new UpdateChecker(this);
+        pm.registerEvents(updates, this);
 
         PluginCommand command = getCommand("radiantui");
         if (command != null) {
@@ -112,6 +118,7 @@ public final class RadiantUI extends JavaPlugin {
             }
         });
         scheduleOraxenRebuild();
+        updates.check();
 
         getLogger().info("RadiantUI habilitado en " + (System.currentTimeMillis() - start) + "ms · tema global: "
                 + themes.global().id() + " · temas: " + themes.enabled().size()
@@ -167,6 +174,7 @@ public final class RadiantUI extends JavaPlugin {
             hud.load();
             scoreboard.load();
             packs.startHttp();
+            updates.check();
         } catch (RuntimeException ex) {
             return CompletableFuture.failedFuture(ex);
         }
@@ -229,4 +237,5 @@ public final class RadiantUI extends JavaPlugin {
     public ContainerSkinManager containers() { return containers; }
     public ServerLinksManager links() { return links; }
     public QuickMenu quickMenu() { return quickMenu; }
+    public UpdateChecker updates() { return updates; }
 }

@@ -110,6 +110,17 @@ http:
   public-url: ""
   threads: 2
 
+# ──────────────────────────── ACTUALIZACIONES ──────────────────────────
+# Comprueba de forma asíncrona (sin bloquear el arranque) si hay una versión más nueva.
+# Si no hay internet, el repo es privado o aún no tiene releases, se ignora en silencio.
+update-checker:
+  enabled: true
+  source: "github"            # "github" (Releases) o "spigot" (vía api.spiget.org)
+  github-repo: "TTVPrivalo21/RadiantUI"
+  spigot-author-url: "https://www.spigotmc.org/resources/authors/thekillerv2.1619961/"
+  spigot-resource-id: 0       # ID del recurso en SpigotMC (solo con source: "spigot"; 0 = desactivado)
+  notify-admins-on-join: true # aviso clicable a jugadores con radiantui.admin al entrar
+
 # ─────────────────────────────── MENSAJES ──────────────────────────────
 messages:
   prefix: "<dark_gray>[</dark_gray><white>♥ RadiantUI</white><dark_gray>]</dark_gray> "
@@ -136,3 +147,4 @@ messages:
   reload-start: "<prefix><gray>Recargando configuración y regenerando packs..."
   reload-done: "<prefix><gray>Recarga completa en <white>{ms}ms</white> · {packs} pack(s) generados."
   reload-failed: "<prefix><white>Error al regenerar los packs: <gray>{error}"
+  update-available: "<prefix><white>¡Nueva versión disponible!</white> <gray>{current}</gray> <dark_gray>→</dark_gray> <white><bold>{latest}</bold></white> <click:open_url:'{url}'><hover:show_text:'<gray>{url}'><white><u>[Descargar]</u></white></hover></click>"

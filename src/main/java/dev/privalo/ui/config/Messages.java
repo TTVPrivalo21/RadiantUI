@@ -17,8 +17,16 @@ public final class Messages {
 
     /** @param replacements alternating key/value pairs for {key} placeholders */
     public Component get(CommandSender sender, String key, String... replacements) {
-        String raw = plugin.configs().main().getString("messages." + key, "<accent>" + key);
-        String prefix = plugin.configs().main().getString("messages.prefix", "");
+        // getString(path) without an explicit default falls back to the jar's config.yml,
+        // so messages added in new versions work with an old config.yml too.
+        String raw = plugin.configs().main().getString("messages." + key);
+        if (raw == null) {
+            raw = "<white>" + key;
+        }
+        String prefix = plugin.configs().main().getString("messages.prefix");
+        if (prefix == null) {
+            prefix = "";
+        }
         raw = raw.replace("<prefix>", prefix);
         for (int i = 0; i + 1 < replacements.length; i += 2) {
             raw = raw.replace("{" + replacements[i] + "}", replacements[i + 1]);

@@ -206,14 +206,51 @@ Inventory inv = Bukkit.createInventory(null, 54, ui.containerTitle(player, 6, "<
 
 Evento: `dev.privalo.ui.api.event.ThemeChangeEvent` (cancelable).
 
+## ✿ Versiones y actualizaciones
+
+### Aviso al cambiar el `.jar`
+
+RadiantUI guarda la última versión que se ejecutó en `plugins/RadiantUI/.last-version`. Al arrancar:
+
+- si el archivo no existe → `RadiantUI 1.1.0 · instalación inicial`;
+- si la versión del `.jar` es distinta → `RadiantUI actualizado: 1.0.0 -> 1.1.0` (o *downgrade* si es más antigua);
+- después guarda la versión actual. Si es la misma, no se imprime nada.
+
+### Update checker (`config.yml → update-checker`)
+
+```yaml
+update-checker:
+  enabled: true
+  source: "github"            # "github" o "spigot"
+  github-repo: "TTVPrivalo21/RadiantUI"
+  spigot-author-url: "https://www.spigotmc.org/resources/authors/thekillerv2.1619961/"
+  spigot-resource-id: 0       # con source: "spigot" y un ID > 0
+  notify-admins-on-join: true
+```
+
+- **github**: consulta `https://api.github.com/repos/<repo>/releases/latest` (`tag_name`, `html_url`).
+- **spigot**: consulta `https://api.spiget.org/v2/resources/<id>/versions/latest` (`name`) y enlaza al
+  recurso de SpigotMC y al perfil del autor.
+- Se ejecuta en segundo plano al iniciar y con `/ui reload` (`HttpClient` asíncrono, timeout de 5 s,
+  cabecera `User-Agent`). Normaliza `v1.2.0` → `1.2.0` y compara versiones semánticas
+  (`1.10.0 > 1.9.9`, `1.2.0 > 1.2.0-beta`).
+- Si hay una versión más nueva, imprime un bloque en consola (actual, nueva y enlace) y, con
+  `notify-admins-on-join`, envía al entrar un aviso clicable a quien tenga `radiantui.admin`
+  (mensaje `messages.update-available`).
+- Sin internet, repo privado, sin releases (404) o timeout → se ignora en silencio, sin stacktraces.
+- Si conservas un `config.yml` antiguo sin esta sección, se usan los valores por defecto del `.jar`.
+
 ## ✿ Compilación
 
-Requiere **JDK 21+**.
+Requiere **JDK 21+**. La versión se define solo en `pom.xml` (`plugin.yml` usa `${project.version}`).
 
 ```bash
-mvn package                 # → target/RadiantUI-1.0.0.jar
+mvn package                 # → target/RadiantUI-1.1.0.jar
 bash build-local.sh         # usa Maven si existe; si no, javac contra ~/.m2 + jar
 ```
+
+`build-local.sh` lee la versión del `pom.xml`, borra los `RadiantUI-*.jar` anteriores de `target/` y
+genera `target/RadiantUI-<versión>.jar`.
 
 ## Licencia
 
