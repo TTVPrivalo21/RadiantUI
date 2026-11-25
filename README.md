@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="radiantui.png" width="320" alt="Radiantui logo">
+</p>
+
 # ♥ RadiantUI
 
 Rediseño completo de la interfaz de Minecraft para **Paper / Purpur 1.21.x – 26.x** (Java 21+):
